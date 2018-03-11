@@ -1,73 +1,70 @@
 set nocompatible
 
 """""""""""""""""""""""""""""""""""""""""""
-" ---------------- VUNDLE --------------- " 
+" ---------------- PLUG ----------------- "
 """""""""""""""""""""""""""""""""""""""""""
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+call plug#begin('~/.local/share/nvim/plugged')
 
 " -- PLUGINS -- "
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'tpope/vim-surround'
-Plugin 'vim-airline/vim-airline'
+Plug 'tpope/vim-surround'
+Plug 'vim-airline/vim-airline'
     let g:airline#extisions#tabline#enabled = 1
     let g:airline#extensions#tabline#left_sep = ''
     let g:airline#extensions#tabline#left_alt_sep = ''
     let g:airline#extensions#tabline#formatter = 'unique_tail'
-Plugin 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline-themes'
     let g:airline_left_sep = ''
     let g:airline_right_sep = ''
     let g:airline_detect_modified=1
     let g:airline_powerline_fonts=1
     let g:airline_theme='angr'
-Plugin 'ervandew/supertab'
-Plugin 'nvie/vim-flake8'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'davidhalter/jedi-vim'
+Plug 'ervandew/supertab'
+Plug 'nvie/vim-flake8'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'davidhalter/jedi-vim'
     let g:jedi#force_py_version = 3
-if !has('nvim')
-    Plugin 'valloric/youcompleteme'
-        " --- instalar o clang e recompilar  --- "
-        "  sudo apt-get install clang
-        "  cd ~/.vim/bundle/youcompleteme
-        "  python3 install.py --all
-        let g:ycm_autoclose_preview_window_after_completion=1
-        let g:ycm_python_binary_path='/usr/bin/python3'
-        map <leader>g :ycmcompleter gotodefinitionelsedeclaration<cr>
-endif
 if has('nvim')
-    Plugin 'shougo/deoplete.nvim'
+    Plug 'shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
         let g:deoplete#eneble_at_startup = 1
         let g:python3_host_prog = '/usr/bin/python3'
         let g:loaded_python_provider = 1  " no python2
         let g:python_host_skip_check = 1  " no python2 checker
 endif
-Plugin 'dracula/vim'
-Plugin 'rakr/vim-one'
-Plugin 'reewr/vim-monokai-phoenix'
-Plugin 'tmhedberg/SimpylFold'
+Plug 'dracula/vim'
+Plug 'rakr/vim-one'
+Plug 'reewr/vim-monokai-phoenix'
+Plug 'tmhedberg/SimpylFold'
     let g:SimpylFold_docstrign_preview=1
-Plugin 'scrooloose/nerdtree'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'flazz/vim-colorschemes' 
-"Plugin '' TAGBAR
-Plugin 'Yggdroot/indentLine'
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'flazz/vim-colorschemes' 
+Plug 'Yggdroot/indentLine'
     let g:indentLine_char = '┆'  
-Plugin 'scrooloose/syntastic'
-    let g:syntastic_error_symbol='✗'
-    let g:syntastic_warning_symbol='⚠'
-    let g:syntastic_check_on_open=1
-    let g:syntastic_loc_list_height=3
-Plugin 'tpope/vim-commentary'
-Plugin 'lervag/vimtex'
-Plugin 'honza/vim-snippets'
-Plugin 'jiangmiao/auto-pairs'
-Plugin 'majutsushi/tagbar'
+if has('vim')
+    Plug 'scrooloose/syntastic'
+        let g:syntastic_error_symbol='✗'
+        let g:syntastic_warning_symbol='⚠'
+        let g:syntastic_check_on_open=1
+        let g:syntastic_loc_list_height=3
+endif
+Plug 'tpope/vim-commentary'
+Plug 'lervag/vimtex'
+Plug 'honza/vim-snippets'
+Plug 'jiangmiao/auto-pairs'
+Plug 'majutsushi/tagbar'
     noremap <F9> :TagbarToggle<cr>
-Plugin 'vim-scripts/numbers.vim'
+Plug 'vim-scripts/numbers.vim'
+Plug 'junegunn/fzf.vim'
+if has('nvim')
+    Plug 'w0rp/ale'
+    let g:ale_sign_column_always = 1
+    let g:ale_sign_error = '☠'
+    let g:ale_sign_warning = '☢'
+    let g:airline#extensions#ale#enabled = 1
+endif
+" VER ryanoasis/vim-devicons
 
-call vundle#end()
+call plug#end()
 filetype plugin indent on
 """""""""""""""""""""""""""""""""""""""""""
 " --------------------------------------- " 
@@ -173,14 +170,12 @@ set showcmd
 set path+=**
 set wildmenu
 set hidden
+set splitbelow
+set splitright
 set inccommand=split
     hi MatchParen cterm=bold ctermbg=none ctermfg=lightblue
 " set list lcs=tab:\┆\  "like indentLine plugin, but for tabs indentation
-
-" if exists('+colorcolumn')
-"     " -- Highlight up too 255 columns beyound 'textwidth' -- "
-"     let &l:colorcolumn='+' . join(range(0, 254), ',+')
-" endif
+" let &l:colorcolumn='+' . join(range(0, 254), ',+')
 
 if has('folding')
     if has('windows')
@@ -194,57 +189,12 @@ syntax on
 
 
 
-"
-" ----- PYTHON VIRTUALENV SUPPORT ----- "
-"
-"py3 << EOF
-"import os
-"import sys
-"if 'VIRTUAL_ENV' in os.environ:
-"    project_base_dir = os.environ['VIRTUAL_ENV']
-"    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-"    exec:compile(open(activate_this, 'rb').read(), activate_this, 'exec'),
-"                 dict(__file__=activate_this))
-"EOF
 
-
-
-"
 " ----- last cursor position ----- "
-"
 autocmd BufReadPost *
     \ if line("'\"") > 0 && line("'\"") <= line("$") |
     \   exe "normal g`\"" |
     \ endif
-
-
-"""""""""""""""""""""""""""""
-"      VIM   SCREENCAST     "
-"""""""""""""""""""""""""""""
-
-"VimScreencast #65: moving lines vertically
-""function! s:Visual()
-"    return visualmode() == 'V'
-"endfunction
-"
-"function! wincent#mappings#visual#mode_up() abort range
-"    let l:at_top=a:firstline == 1
-"    if s:Visual() && !l:at_top
-"        '<,'>move '<-2
-"        call feedkeys('gv=', 'n')
-"    endif
-"    call feedkeys('gv', 'n')
-"endfunction
-"
-"function! wincent#mappings#visual#move_down() abort range
-"    let l:at_bottom=a:lastline == line('$')
-"    if s:Visual && !l:at_bottom
-"        '<,'>move '>+1
-"        call feddkeys('gv=', 'n')
-"    endif
-"    call feedkeys('gv', 'n')
-"endfunction
-"
 
 
 augroup BgHighlight
@@ -263,7 +213,22 @@ augroup BgHighlight
     autocmd WinLeave * set nocursorline
     autocmd WinEnter * hi CursorLineNr ctermfg=yellow
 
-    autocmd WinLeave colorcolumn='+' . join(range(0, 254), ',+')
+    autocmd BufWinLeave ColorColumn='+' . join(range(0, 254), ',+')
 
     autocmd TermOpen * set norelativenumber nonumber
 augroup end
+
+
+
+
+" USEFULL UNICODE CHARS
+" ⛔26d4
+" ✘ 2718
+" ✔ 2714
+" ⛉ 26c9
+" ⛊ 26ca
+" ⌲ 2332
+" ⌳ 2333
+" ☠ 2620
+" ☢ 2622
+" ☣ 2623
