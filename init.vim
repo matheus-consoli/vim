@@ -44,8 +44,9 @@ Plug 'nvie/vim-flake8'
 Plug 'ctrlpvim/ctrlp.vim'
 
 Plug 'davidhalter/jedi-vim'
-    let g:jedi#completions_enabled = 1
+    let g:jedi#completions_enabled = 0  " delegate to deoplete-jedi complete
     let g:jedi#force_py_version = 3
+    let g:jedi#show_call_signature = "1"
 
 Plug 'zchee/deoplete-jedi'
 
@@ -148,8 +149,8 @@ noremap <c-j> ddp
 noremap <c-k> ddkP
 vnoremap <c-j> dkp
 vnoremap <c-k> dkP
-noremap <M-down> <esc>:resize +2<cr>
-noremap <M-up> <esc>:resize -2<cr>
+noremap <M-down> <c-w>+
+noremap <M-up> <c-w>-
 noremap <M-left> <c-w><
 noremap <M-right> <c-w>>
 noremap <c-left> <c-w>h
@@ -173,6 +174,8 @@ nnoremap <pageDOWN> :bprevious<cr>
 nnoremap <leader><tab> :tabnew<cr>
 nnoremap <leader>a :%y+<cr>
 tnoremap <esc> <c-\><c-n>
+inoremap ; ;<c-g>u
+nnoremap <silent> gm :call cursor(0, len(getline('.'))/2)<cr>
 
 
 " ------- SETS ------ "
@@ -223,7 +226,7 @@ set history=200
 set scrolloff=4
 set backspace=indent,eol,start
 set colorcolumn=+1
-" set completeopt-=preview
+set completeopt=menuone,noinsert,noselect
 set showcmd
 set path+=**
 set wildmenu
@@ -271,8 +274,11 @@ augroup BgHighlight
 
     " autocmd! FocusLost ColorColumn='+' . join(range(0, 254), ',+')
 
-    autocmd TermOpen * set norelativenumber nonumber
-    autocmd TermClose * set norelativenumber nonumber
+    " autocmd TermOpen * set norelativenumber nonumber
+    " autocmd TermClose * set norelativenumber nonumber
+
+    " autocmd! CmdwinEnter * set norelativenumber number
+    " autocmd! CmdwinLeave * set relativenumber
 
     autocmd! VimEnter * hi SignColumn ctermbg=236
                         hi MatchParen cterm=bold ctermbg=none ctermfg=yellow
